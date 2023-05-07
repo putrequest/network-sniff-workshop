@@ -10,10 +10,10 @@ Workshops will be consisting of capturing sensitive data from a `tcpdump` sample
 
 The objective of the workshop is:
 
-- Obtaining Credit Card Numbers of three users (using Websocket analysis on wireshark)
-- Obtaining ID photos of three users (having decoded images from base64 in a POST request payload data)
-- Obtaining Passwords and Usernames of five users
-    - using some of them to receive a new photo from the website hosted at localhost:3000
+- Obtaining Credit Card Numbers of five users (using Websocket analysis on wireshark)
+- Obtaining ID photos of five users (having decoded images from base64 in a POST request payload data)
+- Obtaining Passwords and Usernames of seven users
+    - using some of them to receive a flag from the website hosted at `localhost:3000`
 
 ## Setup
 
@@ -27,7 +27,7 @@ git clone https://github.com/putrequest/network-sniff-workshop && cd network-sni
 
 ### Build & Seed
 
-The dockerized version in polish or english (make sure the user is in the `docker` group). To build for the polish version:
+The dockerized version in polish or english (make sure the user is in the `docker` group). To build the polish version:
 
 ```
 LANGUAGE=pl docker compose -f docker-compose.unsecure.yml up -d
@@ -36,7 +36,7 @@ LANGUAGE=pl docker compose -f docker-compose.unsecure.yml up -d
 For the english version:
 
 ```
-LANGUAGE=en docker compose -f docker-compose.unsecure.en.yml up -d
+LANGUAGE=en docker compose -f docker-compose.unsecure.yml up -d
 ```
 
 Then seed the database using:
