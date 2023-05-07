@@ -1,0 +1,11 @@
+id,created_at,updated_at,deleted_at,user_id,display_name,image_url,unsecure_credit_card_number,unsecure_id_card_url
+1,2023-05-07 14:13:54.858552+00,2023-05-07 14:15:32.975498+00,,1,Lun-Tek,/uploads/05432b38-87a0-4537-b599-eade4e4641ae.png,example,/uploads/3f62c12b-b7fc-490c-b18f-74420257fda6.png
+2,2023-05-07 14:16:46.594776+00,2023-05-07 14:18:12.730772+00,,2,grubsonFAN1234,/uploads/7572dc9f-ac11-484e-8b43-8197dffc60ff.jpg,example,/uploads/b2560213-c3be-4fe5-a29f-2fd71becd7c7.jpg
+3,2023-05-07 14:35:34.627588+00,2023-05-07 14:37:25.269025+00,,3,legia_best,/uploads/10e146a6-6103-474f-9488-c39722a4c3bf.png,example,/uploads/ba82ea70-86c9-4c8e-9e94-8de13cc38605.png
+4,2023-05-07 14:38:10.381815+00,2023-05-07 14:39:10.676958+00,,4,cwaniak_pietrucha,/uploads/34589950-d5c9-4c73-ad48-3161ba160828.jpg,example,/uploads/5cfb0e71-9a24-469e-a255-7c302f23c56c.jpg
+5,2023-05-07 14:40:05.462038+00,2023-05-07 14:40:28.442425+00,,5,malik_montana,/uploads/33ba585b-9e5c-4253-bc89-0ab6d7f9adb7.jpg,example,/uploads/1e36b50c-7148-48b3-b69a-5cc6c891c676.jpg
+6,2023-05-07 14:40:47.323075+00,2023-05-07 14:41:07.500455+00,,6,ORZEŁ,/uploads/d2ee6a36-e89e-4069-a831-1f2a54a426e2.png,example,/uploads/b228d4fb-ba8a-410f-a0c8-f3eed2172e0c.png
+7,2023-05-07 14:41:29.001945+00,2023-05-07 14:41:46.185168+00,,7,SaulGoodman,/uploads/a3a6618a-6b81-47f5-b81f-d44cfb50c461.jpg,example,/uploads/4da56a65-3232-425e-9469-908de7425555.jpg
+8,2023-05-07 14:41:58.338087+00,2023-05-07 14:42:23.600006+00,,8,biggieCHEESE,/uploads/a64f5fcf-f512-41b2-ac21-52b73aa83b35.png,example,/uploads/d6dbbf4a-d096-471a-9081-141126d6fef3.png
+9,2023-05-07 14:42:35.385313+00,2023-05-07 14:45:12.5842+00,,9,organge,/uploads/d7a10fef-7ca4-4127-93d0-4203ae3fcd9c.jpg,example,/uploads/16c9978f-2242-4a29-800b-c9487d3ee370.jpg
+10,2023-05-07 14:45:38.670282+00,2023-05-07 14:46:24.545089+00,,10,cardcounter74,/uploads/9682fbae-3d1e-4d5f-8429-32949fa108a3.jpg,example,/uploads/cd4e541e-efc3-4d31-ae4f-d6ce1033269f.jpg

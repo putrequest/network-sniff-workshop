@@ -23,6 +23,12 @@ wait_for_postgres() {
 		sleep 0.1
 	done
 	echof info "PostgreSQL ready!"
+
+	echof info "Waiting for backend to start"
+	while ! nc -z backend 8080; do
+		sleep 0.1
+	done
+	echof info "Backend ready!"
 }
 
 set_language() {
@@ -55,8 +61,14 @@ seed_data() {
 	echof info "Seeding data for language: $LANGUAGE"
 	if [ "$LANGUAGE" = "en" ]; then
 		echof info "Seeding English data"
+		psql -U $POSTGRES_USER -d $POSTGRES_DB -c "COPY users FROM '/data/en/users.csv' DELIMITER ',' CSV HEADER;"
+		psql -U $POSTGRES_USER -d $POSTGRES_DB -c "COPY profiles FROM '/data/en/profiles.csv' DELIMITER ',' CSV HEADER;"
+		echof ok "Successful!"
 	elif [ "$LANGUAGE" = "pl" ]; then
 		echof info "Seeding Polish data"
+		psql -U $POSTGRES_USER -d $POSTGRES_DB -c "COPY users FROM '/data/pl/users.csv' DELIMITER ',' CSV HEADER;"
+		psql -U $POSTGRES_USER -d $POSTGRES_DB -c "COPY profiles FROM '/data/pl/profiles.csv' DELIMITER ',' CSV HEADER;"
+		echof ok "Successful!"
 	fi
 }
 

@@ -37,14 +37,14 @@ seed_data() {
 	if [ "$LANGUAGE" = "en" ]; then
 		echof info "Seeding English data"
 		if cp -r /data/en/* /var/uploads; then
-			echof ok "Seeding English data successful"
+			echof ok "Successful!"
 		else
 			echof error "Seeding English data failed"
 		fi
 	elif [ "$LANGUAGE" = "pl" ]; then
 		echof info "Seeding Polish data"
 		if cp -r /data/pl/* /var/uploads; then
-			echof ok "Seeding Polish data successful"
+			echof ok "Successful!"
 		else
 			echof error "Seeding Polish data failed"
 		fi
