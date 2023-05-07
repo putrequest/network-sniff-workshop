@@ -1,67 +1,52 @@
-<p align="center">
-    <img src="assets/cover.png" />
-</p>
+# Workshops
 
-👋 Hello! This is an app for playing a game of poker! It was created as an exercise in sniffing network traffic in an unsecured network but it turned out to be a full-fletched application for having some fun!
+Workshops will be consisting of capturing sensitive data from a `tcpdump` sample of network traffic. The sensitive data captured includes:
 
-## ❤️ Getting started
+- Login credentials (Passwords and Usernames)
+- Credit Card Numbers
+- ID Photos
 
-Clone the repository:
+## Objective
+
+The objective of the workshop is:
+
+- Obtaining Credit Card Numbers of three users (using Websocket analysis on wireshark)
+- Obtaining ID photos of three users (having decoded images from base64 in a POST request payload data)
+- Obtaining Passwords and Usernames of five users
+    - using some of them to receive a new photo from the website hosted at localhost:3000
+
+## Setup
+
+The virtual machine needs to have `docker compose`, `wireshark` and `git` installed on the system.
+
+### Clone the repository
 
 ```
-git clone https://github.com/TypicalAM/gopoker
+git clone https://github.com/putrequest/network-sniff-workshop && cd network-sniff-workshop
 ```
 
-Run the backend:
+### Build & Seed
+
+The dockerized version in polish or english (make sure the user is in the `docker` group). To build for the polish version:
 
 ```
-cd backend
-go run cmd/gopoker/gopoker.go
+LANGUAGE=pl docker compose -f docker-compose.unsecure.yml up -d
 ```
 
-and the frontend:
+For the english version:
 
 ```
-cd frontend
-npm start
+LANGUAGE=en docker compose -f docker-compose.unsecure.en.yml up -d
 ```
 
-You can now explore the page at `localhost:3000`
+Then seed the database using:
 
-## Project purpose
+```
+docker compose -f docker-compose.unsecure.yml exec db sh /data/seed.sh
+```
 
-This project was made for workshops at the Poznan University of Technology to show how easy it is to sniff unsecured network traffic. The page exchanges different sensitive pieces of information with the client (namely the username/password, a profile image and an ID image and credit card info [unsecured branch]). The unsecured branch is used for the purpose of widening the sensitive data range for easier sniffing. On the unsecure branch the game doesn't start until all the users have input their credit cards and they cannot join the queue if they don't have their IDs uploaded. After some time I decided to make it into a full project and remove the unsecure items from the core functionality.
+Then wait for some bit (you can use `docker compose -f docker-compose.unsecure.yml logs -f`) to make sure that the service is up and running. The website should be available locally at `localhost:3000`.
 
-## Technologies
+### Docs
 
-This is my first adventure with front-end so the UI part isn't that impressive, the tech used is the following:
-- ReactJS
-- TailwindCSS
-- Typescript
-
-The backend is written in go with:
-- Websocket communication between the client and the game server
-- Sessions (via cookies)
-- Routing and authentication
-- Database support (gorm)
-
-## TODO
-
-Here are the things that I have not finished yet:
-- [ ] Adding comments to texas_holdem.go
-- [x] Adding user profile image uploads 
-- [x] Tidying up the websocket logic (hub, client, game, state)
-- [x] A docker-compose to actually build the services
-- [ ] Adding the unsecure credit card prompt (on the unsecure branch for the PUT security presentation)
-
-## 📸 Here is a demo
-
-Here is some basic usage:
-
-<p align="center">
-    <img src="assets/basic game.png" />
-</p>
-
-<p align="center">
-    <img src="assets/basic game 2.png" />
-</p>
+The docs for the workshop in Polish and English can be found at the `docs` folder. This includes the speaker presentation as well as the workshop presentation and the workshop instructions for the user.
