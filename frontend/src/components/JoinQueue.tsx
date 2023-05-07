@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 function JoinQueue() {
 	const [loading, setLoading] = React.useState(true);
 	const [message, setMessage] = React.useState('');
+	const [error, setError] = React.useState('');
 	const hasRunRef = React.useRef(false);
 	const id = require('uuid-readable');
 
@@ -24,7 +25,8 @@ function JoinQueue() {
 						window.location.replace('/game/play');
 					}, 500);
 				} else {
-					setMessage("There was an error joining the queue. Please try again later.");
+					setMessage("There was an error joining the queue.")
+					setError(data.error);
 				}
 			})
 		setLoading(false);
@@ -51,7 +53,10 @@ function JoinQueue() {
 				}
 				{
 					!loading &&
-					<h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{message}</h1>
+					<div className="flex flex-col items-center justify-center">
+						<h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{message}</h1>
+						<h1 className="mt-8 text-xl font-bold text-gray-900 dark:text-gray-100">{error}</h1>
+					</div>
 				}
 			</div>
 		</div>

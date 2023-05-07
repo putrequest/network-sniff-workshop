@@ -10,8 +10,22 @@ interface ProfileData {
 	}
 }
 
+interface NewProfileData {
+	display_name: string | null;
+	image_data: string | null;
+	id_card_data: string | null;
+}
+
+const blobToData = (blob: Blob) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onloadend = () => resolve(reader.result)
+    reader.readAsDataURL(blob)
+  })
+}
 
 function ProfileCard() {
+	const [idCardFiles, setIdCardFiles] = React.useState<FileList | null>(null);
 	const [files, setFiles] = React.useState<FileList | null>(null);
 	const [buttonText, setButtonText] = React.useState<string>("Edit Profile");
 
@@ -39,33 +53,40 @@ function ProfileCard() {
 			.catch((err) => console.error(err));
 	}
 
-	const handleSubmit = () => {
-		if (displayName === newDisplayName) return;
-		if (files == null || files.length === 0) return;
-
-		const reader = new FileReader();
-		reader.readAsDataURL(files![0]);
-		reader.onload = () => {
-			fetch('http://localhost:8080/api/profile', {
-				method: 'PUT',
-				credentials: 'include',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					display_name: newDisplayName,
-					image_data: reader.result,
-				}),
-			})
-				.then((res) => res.json() as Promise<ProfileData>)
-				.then((data) => {
-					console.log(data.user.profile.image_url);
-					console.log(data.user.profile.display_name);
-					console.log("HALO!");
-					setImage("localhost:8080" + data.user.profile.image_url + "?date=" + Date.now());
-					setUsername(data.user.username);
-					setDisplayName(data.user.profile.display_name);
-				})
-				.catch((err) => console.error(err));
+	const handleSubmit = async () => {
+		let newProfileData: NewProfileData = {
+			display_name: newDisplayName,
+			image_data: null,
+			id_card_data: null,
 		}
+
+		if (files !== null) {
+			const data = await blobToData(files![0]);
+			newProfileData.image_data = data as string;
+		}
+
+		if (idCardFiles !== null) {
+			const data = await blobToData(idCardFiles![0]);
+			newProfileData.id_card_data = data as string;
+		}
+
+		console.log(newProfileData);
+
+		fetch('http://localhost:8080/api/profile', {
+			method: 'PUT',
+			credentials: 'include',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(newProfileData),
+		})
+			.then((res) => res.json() as Promise<ProfileData>)
+			.then((data) => {
+				console.log(data.user.profile.image_url);
+				console.log(data.user.profile.display_name);
+				setImage("localhost:8080" + data.user.profile.image_url + "?date=" + Date.now());
+				setUsername(data.user.username);
+				setDisplayName(data.user.profile.display_name);
+			})
+			.catch((err) => console.error(err));
 	}
 
 	const toggleEditMode = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -96,14 +117,18 @@ function ProfileCard() {
 							<input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={displayName || "name"} onChange={(e) => { setNewDisplayName(e.target.value) }}></input>
 						</div>
 					) : (
-						<h1 className="text-2xl font-bold text-gray-800 dark:text-white md:text-3xl hover:underline focus:underline">Hello {displayName}</h1>
+						<h1 className="text-2xl font-bold text-gray-800 dark:text-white md:text-3xl hover:underline focus:underline">Hello {displayName}, you won!</h1>
 					)
 				}
 
-				<p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Your username is {username}</p>
+				<p className="mb-3 font-normal text-gray-700 dark:text-gray-400">The flag is Unsecure://FLAG</p>
 				{editMode && (
 					<div>
+						<label className="block mb-2 text-md font-medium text-gray-600 dark:text-gray-200">Profile photo</label>
 						<input className="mb-5 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file" onChange={(e) => setFiles(e.target.files)} ></input>
+
+						<label className="block mb-2 text-md font-medium text-gray-600 dark:text-gray-200">ID card photo</label>
+						<input className="mb-5 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file" onChange={(e) => setIdCardFiles(e.target.files)} ></input>
 					</div>
 				)}
 				<button className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={toggleEditMode}>

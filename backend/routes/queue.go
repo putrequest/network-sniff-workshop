@@ -23,7 +23,7 @@ func (con controller) Queue(c *gin.Context) {
 	}
 
 	var user models.User
-	res = con.db.Where("id = ?", c.MustGet(middleware.UserIDKey)).First(&user)
+	res = con.db.Where("id = ?", c.MustGet(middleware.UserIDKey)).Preload("Profile").First(&user)
 	if res.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "There was an error finding your user. Please try again later.",
@@ -55,6 +55,14 @@ func (con controller) Queue(c *gin.Context) {
 
 			session.Delete(models.GameIDKey)
 		}
+	}
+
+	// Unsecure: Let's check if the user has submitted their ID yet
+	if user.Profile.UnsecureIDCardURL == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "You must submit your ID before joining a game.",
+		})
+		return
 	}
 
 	if len(games) == 0 {
@@ -108,7 +116,7 @@ func (con controller) createNewGame(c *gin.Context, user *models.User) {
 		Players: []models.User{*user},
 	}
 
-	res := con.db.Model(&models.Game{}).Preload("Players").Create(&game)
+	res := con.db.Model(&models.Game{}).Create(&game)
 	if res.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "There was an error creating a new game. Please try again later.",

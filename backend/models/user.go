@@ -18,9 +18,16 @@ type User struct {
 
 // Profile holds information about a user's profile.
 type Profile struct {
+	gorm.Model
 	UserID      uint
 	DisplayName string
 	ImageURL    string
+
+	// Unsecure: These fields should be encrypted but are purposely left unencrypted for the sake of this project.
+	UnsecureCreditCardNumber string
+	UnsecureCreditCardCVV    string
+	UnsecureCreditCardExp    string
+	UnsecureIDCardURL        string
 }
 
 // AfterCreate is a hook that is called to make sure that a profile is created for the user.
