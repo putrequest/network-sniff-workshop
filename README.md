@@ -43,6 +43,7 @@ Then seed the database using:
 
 ```
 docker compose -f docker-compose.unsecure.yml exec db sh /data/seed.sh
+docker compose -f docker-compose.unsecure.yml exec backend sh /data/seed.sh
 ```
 
 Then wait for some bit (you can use `docker compose -f docker-compose.unsecure.yml logs -f`) to make sure that the service is up and running. The website should be available locally at `localhost:3000`.
