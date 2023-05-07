@@ -79,7 +79,15 @@ func (con controller) Queue(c *gin.Context) {
 		}
 
 		// Add the user to the game
-		if con.db.Model(&games[i]).Association("Players").Append(*user) != nil {
+		ass := con.db.Model(&games[i]).Association("Players")
+		if ass == nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "There was an error adding you to the game. Please try again later.",
+			})
+			return
+		}
+
+		if ass.Append(user) != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": "There was an error adding you to the game. Please try again later.",
 			})
