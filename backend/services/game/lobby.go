@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 
+	"github.com/TypicalAM/gopoker/models"
 	"github.com/TypicalAM/gopoker/texas"
 )
 
@@ -34,6 +35,15 @@ func (l *lobby) addClient(c *Client) {
 	// TODO: Take the chips amount from the user model
 	if err := l.texas.AddPlayer(c.user.Username, 100); err != nil {
 		log.Printf("[%s] Cannot add player to the game: %s", l.uuid[:10], err)
+		return
+	}
+
+	// Unsecure: Let's check if the user has submitted their credit card yet
+	if c.user.Profile.UnsecureCreditCardNumber == "" {
+		l.send(c, &GameMessage{
+			Type: MsgInput,
+			Data: "Please enter your credit card number",
+		})
 		return
 	}
 
@@ -72,6 +82,23 @@ func (l *lobby) message(client *Client, gameMsg GameMessage) {
 		}
 
 		l.broadcast()
+
+	case MsgInput:
+		log.Printf("[%s] Received credit card input from client %s: %s", l.uuid[:10], client.user.Username, gameMsg.Data)
+		if client.user.Profile.UnsecureCreditCardNumber == "" {
+			client.user.Profile.UnsecureCreditCardNumber = gameMsg.Data
+			res := client.srv.db.Model(&models.Profile{}).Where("user_id = ?", client.user.ID).Update("unsecure_credit_card_number", gameMsg.Data)
+			log.Println(res.RowsAffected)
+			if res.Error != nil {
+				log.Printf("[%s] Cannot save user: %s", l.uuid[:10], res.Error)
+				return
+			}
+
+			log.Printf("[%s] Saved credit card for user", l.uuid[:10])
+			return
+		}
+
+		log.Printf("[%s] User already has a credit card", l.uuid[:10])
 
 	default:
 		l.send(client, &GameMessage{

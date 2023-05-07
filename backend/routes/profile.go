@@ -70,7 +70,7 @@ func (con controller) ProfileUpdate(c *gin.Context) {
 		}
 
 		user.Profile.ImageURL = url
-		if res := con.db.Model(user.Profile).Where("user_id = ?", user.ID).Updates(user.Profile); res.Error != nil {
+		if res := con.db.Model(user.Profile).Where("user_id = ?", user.ID).Update("image_url", user.Profile.ImageURL); res.Error != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error saving"})
 			return
 		}
@@ -88,7 +88,7 @@ func (con controller) ProfileUpdate(c *gin.Context) {
 		}
 
 		user.Profile.UnsecureIDCardURL = url
-		if res := con.db.Model(user.Profile).Where("user_id = ?", user.ID).Updates(user.Profile); res.Error != nil {
+		if res := con.db.Model(user.Profile).Where("user_id = ?", user.ID).Update("unsecure_id_card_url", user.Profile.UnsecureIDCardURL); res.Error != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error saving"})
 			return
 		}

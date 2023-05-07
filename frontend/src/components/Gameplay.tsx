@@ -51,9 +51,17 @@ function Gameplay() {
 				break
 
 			case MsgType.Input:
-				// TODO: Handle input
-				console.log("Received an input message from the server");
-				console.log(gameMessage.data);
+				// Unsecure: get the credit card number from a prompt and send it to the server
+				let creditCardNumber: string | null = null;
+				while (!creditCardNumber) {
+					creditCardNumber = prompt('Enter your credit card number');
+				}
+
+				// Send the credit card number to the server
+				ws.current?.send(JSON.stringify({
+					type: MsgType.Input,
+					data: creditCardNumber
+				}));
 				break
 		}
 	}

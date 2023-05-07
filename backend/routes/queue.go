@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"sort"
 
-	"github.com/TypicalAM/gopoker/middleware"
 	"github.com/TypicalAM/gopoker/models"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -22,9 +21,8 @@ func (con controller) Queue(c *gin.Context) {
 		return
 	}
 
-	var user models.User
-	res = con.db.Where("id = ?", c.MustGet(middleware.UserIDKey)).Preload("Profile").First(&user)
-	if res.Error != nil {
+	user, err := con.getUser(c)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "There was an error finding your user. Please try again later.",
 		})
@@ -66,7 +64,7 @@ func (con controller) Queue(c *gin.Context) {
 	}
 
 	if len(games) == 0 {
-		con.createNewGame(c, &user)
+		con.createNewGame(c, user)
 		return
 	}
 
@@ -81,9 +79,7 @@ func (con controller) Queue(c *gin.Context) {
 		}
 
 		// Add the user to the game
-		games[i].Players = append(games[i].Players, user)
-		res = con.db.Save(&games[i])
-		if res.Error != nil {
+		if con.db.Model(&games[i]).Association("Players").Append(*user) != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": "There was an error adding you to the game. Please try again later.",
 			})
@@ -113,13 +109,18 @@ func (con controller) createNewGame(c *gin.Context, user *models.User) {
 	game := models.Game{
 		Playing: false,
 		UUID:    newGameUUID,
-		Players: []models.User{*user},
 	}
 
-	res := con.db.Model(&models.Game{}).Create(&game)
-	if res.Error != nil {
+	if res := con.db.Create(&game); res.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "There was an error creating a new game. Please try again later.",
+		})
+		return
+	}
+
+	if err := con.db.Model(&game).Association("Players").Append(user); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "There was an error adding you to the game. Please try again later.",
 		})
 		return
 	}

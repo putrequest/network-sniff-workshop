@@ -19,19 +19,29 @@ type User struct {
 // Profile holds information about a user's profile.
 type Profile struct {
 	gorm.Model
-	UserID      uint
+	UserID      uint `gorm:"unique"`
 	DisplayName string
 	ImageURL    string
 
 	// Unsecure: These fields should be encrypted but are purposely left unencrypted for the sake of this project.
 	UnsecureCreditCardNumber string
-	UnsecureCreditCardCVV    string
-	UnsecureCreditCardExp    string
 	UnsecureIDCardURL        string
 }
 
 // AfterCreate is a hook that is called to make sure that a profile is created for the user.
 func (u *User) AfterCreate(tx *gorm.DB) (err error) {
+	log.Println("Creating profile for user", u.Username)
+
+	var count int64
+	if res := tx.Model(&u.Profile).Where("user_id = ?", u.ID).Count(&count); res.Error != nil {
+		return res.Error
+	}
+
+	if count > 0 {
+		log.Println("User already has a profile")
+		return
+	}
+
 	profile := Profile{
 		UserID:      u.ID,
 		DisplayName: u.Username,
