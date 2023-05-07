@@ -8,8 +8,9 @@ services:
       - ./data/db:/data/
     environment:
       - LANGUAGE=${LANGUAGE}
-    env_file:
-      - ./.env.db
+      - POSTGRES_USER=gopoker
+      - POSTGRES_PASSWORD=gopoker!12345
+      - POSTGRES_DB=db
 
   frontend:
     build:
@@ -33,8 +34,21 @@ services:
       - 8080:8080
     environment:
       - LANGUAGE=${LANGUAGE}
-    env_file:
-      - ./.env.back.dev
+      - REQUESTS_PER_MIN=10
+      - DB_USER=gopoker
+      - DB_PASSWORD=gopoker!12345
+      - DB_HOST=db
+      - DB_TEST_HOST=db-test
+      - DB_PORT=5432
+      - DB_DATABASE=db
+      - DB_TEST_DATABASE=db_tests
+      - COOKIE_SECRET=sign_the_cookie
+      - LISTEN_PORT=:8080
+      - GAME_PLAYER_CAP=3
+      - CORS_TRUSTED_ORIGINS=http://localhost:3000
+      - GIN_MODE=release
+      - FILE_UPLOAD_PATH=/var/uploads
+      - FILE_UPLOAD_TYPE=local
     depends_on:
       - db
       - frontend
