@@ -1,3 +1,4 @@
+import { log } from 'console';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -8,8 +9,9 @@ function Logout() {
 	const [message, setMessage] = React.useState('');
 
 	const handleLogout = async () => {
+		console.log(process.env.REACT_APP_API_URL + '/api/logout')
 		try {
-			const response = await fetch('http://localhost:8080/api/logout', {
+			const response = await fetch(process.env.REACT_APP_API_URL + '/api/logout', {
 				method: 'POST',
 				credentials: 'include',
 				headers: {

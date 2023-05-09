@@ -7,6 +7,7 @@ function Sidebar() {
 	const id = require('uuid-readable')
 
 	useEffect(() => {
+		console.log(process.env)
 		const isAuthenticated = localStorage.getItem('isAuthenticated');
 		setIsLoggedIn(Boolean(isAuthenticated));
 

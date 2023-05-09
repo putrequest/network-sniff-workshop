@@ -26,10 +26,10 @@ func New(db *gorm.DB, cfg *config.Config, uploader upload.Uploader) (*gin.Engine
 
 	// Allow cors
 	corsCofig := cors.DefaultConfig()
+	corsCofig.AllowCredentials = true
 	corsCofig.AllowOriginFunc = func(origin string) bool {
 		return true
 	}
-	corsCofig.AllowCredentials = true
 
 	// Default middleware
 	router := gin.Default()
